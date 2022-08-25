@@ -3,7 +3,6 @@ using DevIO.Api.Configuration;
 using DevIO.Api.Configurations;
 using DevIO.Api.Extensions;
 using DevIO.Data.Context;
-using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;

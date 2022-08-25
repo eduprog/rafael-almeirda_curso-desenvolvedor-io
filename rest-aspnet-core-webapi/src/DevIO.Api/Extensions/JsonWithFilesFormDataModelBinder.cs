@@ -12,10 +12,10 @@ namespace DevIO.Api.Extensions
 {
     public class JsonWithFilesFormDataModelBinder : IModelBinder
     {
-        private readonly IOptions<MvcJsonOptions> _jsonOptions;
+        private readonly IOptions<JsonOptions> _jsonOptions;
         private readonly FormFileModelBinder _formFileModelBinder;
 
-        public JsonWithFilesFormDataModelBinder(IOptions<MvcJsonOptions> jsonOptions, ILoggerFactory loggerFactory)
+        public JsonWithFilesFormDataModelBinder(IOptions<JsonOptions> jsonOptions, ILoggerFactory loggerFactory)
         {
             _jsonOptions = jsonOptions;
             _formFileModelBinder = new FormFileModelBinder(loggerFactory);
@@ -39,7 +39,7 @@ namespace DevIO.Api.Extensions
             var rawValue = valueResult.FirstValue;
 
             // Deserialize the JSON
-            var model = JsonConvert.DeserializeObject(rawValue, bindingContext.ModelType, _jsonOptions.Value.SerializerSettings);
+            var model = JsonConvert.DeserializeObject(rawValue, bindingContext.ModelType);
 
             // Now, bind each of the IFormFile properties from the other form parts
             foreach (var property in bindingContext.ModelMetadata.Properties)

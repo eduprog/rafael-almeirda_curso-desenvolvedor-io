@@ -14,7 +14,7 @@ namespace DevIO.Api.Configurations
     {
         public static IServiceCollection WebApiConfig(this IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc();//.SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.AddApiVersioning(options =>
             {
@@ -72,7 +72,7 @@ namespace DevIO.Api.Configurations
         public static IApplicationBuilder UseMvcConfiguration(this IApplicationBuilder app)
         {
             app.UseHttpsRedirection();
-            app.UseMvc();
+            //app.UseMvc();
             app.UseApiVersioning();
 
             return app;

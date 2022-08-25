@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
@@ -6,8 +7,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using Swashbuckle.Swagger.Model;
 
 
 namespace DevIO.Api.Configurations
@@ -25,15 +28,15 @@ namespace DevIO.Api.Configurations
                     {"Bearer", new string[] { }}
                 };
 
-                c.AddSecurityDefinition("Bearer", new ApiKeyScheme
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
                     Description = "Insira o token JWT desta maneira: Bearer {seu token}",
                     Name = "Authorization",
-                    In = "header",
-                    Type = "apiKey"
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey
                 });
 
-                c.AddSecurityRequirement(security);
+                var secur = new OpenApiSecurityScheme();
             });
 
             return services;
@@ -42,7 +45,7 @@ namespace DevIO.Api.Configurations
         public static IApplicationBuilder UseSwaggerConfig(this IApplicationBuilder app, IApiVersionDescriptionProvider provider)
         {
             //app.UseMiddleware<SwaggerAuthorizedMiddleware>();
-            app.UseSwagger();
+            app.UseSwagger(options => options.SerializeAsV2 = true);
             app.UseSwaggerUI(
                 options =>
                 {
@@ -63,22 +66,23 @@ namespace DevIO.Api.Configurations
 
         public void Configure(SwaggerGenOptions options)
         {
-            foreach (var description in provider.ApiVersionDescriptions)
+            foreach (ApiVersionDescription description in provider.ApiVersionDescriptions)
             {
                 options.SwaggerDoc(description.GroupName, CreateInfoForApiVersion(description));
             }
         }
 
-        static Info CreateInfoForApiVersion(ApiVersionDescription description)
+        static OpenApiInfo CreateInfoForApiVersion(ApiVersionDescription description)
         {
-            var info = new Info()
+            var info = new OpenApiInfo()
             {
                 Title = "API - desenvolvedor.io",
                 Version = description.ApiVersion.ToString(),
                 Description = "Esta API faz parte do curso REST com ASP.NET Core WebAPI.",
-                Contact = new Contact() { Name = "Eduardo Pires", Email = "contato@desenvolvedor.io" },
-                TermsOfService = "https://opensource.org/licenses/MIT",
-                License = new License() { Name = "MIT", Url = "https://opensource.org/licenses/MIT" }
+                Contact =new OpenApiContact() { Name = "Eduardo Pires", Email = "contato@desenvolvedor.io" },
+                TermsOfService =new Uri("https://opensource.org/licenses/MIT"),
+                License = new OpenApiLicense() { Name = "MIT",
+                    Url = new Uri("https://opensource.org/licenses/MIT") }
             };
 
             if (description.IsDeprecated)
@@ -119,6 +123,11 @@ namespace DevIO.Api.Configurations
 
                 parameter.Required |= description.IsRequired;
             }
+        }
+
+        public void Apply(OpenApiOperation operation, OperationFilterContext context)
+        {
+            throw new System.NotImplementedException();
         }
     }
 

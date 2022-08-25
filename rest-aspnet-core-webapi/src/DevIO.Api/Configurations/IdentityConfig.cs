@@ -19,12 +19,11 @@ namespace DevIO.Api.Configurations
         {
             services.AddDbContext<ApplicationDbContext>(options => 
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
-
-            services.AddDefaultIdentity<IdentityUser>()
-                .AddRoles<IdentityRole>()
-                .AddEntityFrameworkStores<ApplicationDbContext>()
-                .AddErrorDescriber<IdentityMensagensPortugues>()
-                .AddDefaultTokenProviders();
+            //services.AddDefaultIdentity<IdentityUser>()
+            //    .AddRoles<IdentityRole>()
+            //    .AddEntityFrameworkStores<ApplicationDbContext>()
+            //    .AddErrorDescriber<IdentityMensagensPortugues>()
+            //    .AddDefaultTokenProviders();
 
             //JWT
             var appSettingsSection = configuration.GetSection("AppSettings");
